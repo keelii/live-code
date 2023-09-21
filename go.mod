@@ -3,9 +3,9 @@ module live-code
 go 1.18
 
 require (
+	dario.cat/mergo v1.0.0
 	github.com/dop251/goja v0.0.0-20230919151941-fc55792775de
 	github.com/evanw/esbuild v0.19.3
-	github.com/wasmerio/wasmer-go v1.0.4
 )
 
 require (

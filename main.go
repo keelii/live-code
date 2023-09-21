@@ -41,7 +41,7 @@ func main() {
 
 	Post("/api/format", func(req *LcRequest, res *LcResponse) {
 		code := req.GetParam("code")
-		ret, err := DprintFormat("main.tsx", code.(string))
+		ret, err := PrettierFormat(code.(string), PrettierFormatOptions{})
 		if err != nil {
 			fmt.Println("error:", err)
 		} else {
