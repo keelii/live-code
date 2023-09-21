@@ -11,6 +11,9 @@ build-js:
       --outfile=static/codemirror-editor.js \
       --global-name=LiveCode
 
+test:
+	go test
+
 clean:
 	go clean
 	rm -f $(BINARY_NAME)
