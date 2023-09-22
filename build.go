@@ -57,7 +57,14 @@ try {
   %s
   window._REACT_ROOT_ = ReactDOM.createRoot(document.getElementById("root"))
   window._REACT_ROOT_.render(<App />)
-} catch (e) { alert(e) }
+} catch (e) { 
+  console.error(e)
+  if (e instanceof ReferenceError && e.message.includes("App is not defined")) {
+    alert("App component is not defined, please define it like this:\n" + "function App() {\n    return <div>Hello, live-code.</div>\n}")	
+  } else {
+    alert(e); 
+  }
+}
 `, code)
 
 	return Build(reactRuntime, options)

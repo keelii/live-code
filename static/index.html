@@ -83,23 +83,25 @@
 <script>
     (function (lc) {
         const getCode = function(code) {
-            return code || lc.editor.state.doc.toString()
+            return code || lc.editor.view.state.doc.toString()
         }
         const iframe = document.getElementById('preview')
 
         lc.handleChange = (content) => {
-            lc.build(getCode(content), ({data, error}) => {
-                if (error) {
-                    console.error(error)
+            lc.build(getCode(content), ({ok, data, msg}) => {
+                if (!ok) {
+                    console.error(msg)
+                    alert(msg)
                 } else {
                     writeIframeContent(data)
                 }
             })
         }
         lc.handleFormat = (content) => {
-            lc.format(getCode(content), ({data, error}) => {
-                if (error) {
-                    console.error(error)
+            lc.format(getCode(content), ({ok, data, msg}) => {
+                if (!ok) {
+                    console.error(msg)
+                    alert(msg)
                 } else {
                     lc.editor.setContent(data)
                 }
@@ -173,7 +175,7 @@
         iframe.onload = () => {
             lc.split = Split(['#left', '#right'])
             lc.editor = new lc.CodeMirrorEditor('editor', {
-                doc: 'hello world',
+                doc: "function App() {\n    return <div>Hello, live-code.</div>\n}",
                 language: 'tsx'
             })
             lc.editor.on('change', lc.debounce(lc.handleChange, 500))

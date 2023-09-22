@@ -34,16 +34,18 @@ func (r *LcRequest) GetParams() (map[string]interface{}, error) {
 	return FromJsonBytes[map[string]interface{}](body), nil
 }
 func (w *LcResponse) WriteJSON(data interface{}) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(ToJsonBytes(data))
+	json := ToJsonBytes(data)
+	w.WriteFile(json, "application/json")
 }
 func (w *LcResponse) WriteHTML(data []byte) {
-	w.Header().Set("Content-Type", "text/html")
+	w.WriteFile(data, "text/html")
+}
+func (w *LcResponse) WriteFile(data []byte, contentType string) {
+	w.Header().Set("Content-Type", contentType)
 	w.Write(data)
 }
 func (w *LcResponse) WriteJS(data []byte) {
-	w.Header().Set("Content-Type", "application/javascript")
-	w.Write(data)
+	w.WriteFile(data, "application/javascript")
 }
 
 func handleFuncWithMethod(method string, pattern string, handler LcHandlerFunc) {

@@ -17,7 +17,13 @@ var previewHTML string
 //go:embed static/codemirror-editor.js
 var codemirrorEditorJS []byte
 
+//go:embed static/favicon.ico
+var favicon []byte
+
 func main() {
+	Get("/favicon.ico", func(req *LcRequest, res *LcResponse) {
+		res.WriteFile(favicon, "image/x-icon")
+	})
 	Get("/", func(req *LcRequest, res *LcResponse) {
 		res.WriteHTML(indexHTML)
 	})
@@ -29,7 +35,7 @@ func main() {
 		if ret.Ok {
 			htmlString = fmt.Sprintf(previewHTML, "Preivew", ret.Data)
 		} else {
-			errCode := fmt.Sprintf("alert(%s)", ToJsonString(ret.Msg))
+			errCode := fmt.Sprintf("console.error(%[1]s);alert(%[1]s)", ToJsonString(ret.Msg))
 			htmlString = fmt.Sprintf(previewHTML, "Error", errCode)
 		}
 		res.WriteHTML([]byte(htmlString))
