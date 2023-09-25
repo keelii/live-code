@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"fmt"
 	"github.com/evanw/esbuild/pkg/api"
+	bds "github.com/keelii/goja_binding"
 	"log"
 	"net/http"
 )
@@ -14,8 +15,8 @@ var indexHTML []byte
 //go:embed static/preview.html
 var previewHTML string
 
-//go:embed static/codemirror-editor.js
-var codemirrorEditorJS []byte
+////go:embed static/codemirror-editor.js
+//var codemirrorEditorJS []byte
 
 //go:embed static/favicon.ico
 var favicon []byte
@@ -29,7 +30,7 @@ func main() {
 	})
 	Get("/preview", func(req *LcRequest, res *LcResponse) {
 		codeParam := req.URL.Query().Get("code")
-		originCode := DecompressText(codeParam)
+		originCode := bds.DecompressText(codeParam)
 		ret := BuildReactCode(originCode, api.TransformOptions{})
 		htmlString := ""
 		if ret.Ok {
@@ -41,13 +42,13 @@ func main() {
 		res.WriteHTML([]byte(htmlString))
 	})
 
-	Get("/static/codemirror-editor.js", func(req *LcRequest, res *LcResponse) {
-		res.WriteJS(codemirrorEditorJS)
-	})
+	//Get("/static/codemirror-editor.js", func(req *LcRequest, res *LcResponse) {
+	//	res.WriteJS(codemirrorEditorJS)
+	//})
 
 	Post("/api/format", func(req *LcRequest, res *LcResponse) {
 		code := req.GetParam("code")
-		ret, err := PrettierFormat(code.(string), PrettierFormatOptions{})
+		ret, err := bds.PrettierFormat(code.(string), bds.PrettierFormatOptions{})
 		if err != nil {
 			fmt.Println("error:", err)
 		} else {
