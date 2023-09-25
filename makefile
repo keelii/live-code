@@ -5,11 +5,11 @@ all: build
 build:
 	go build -o $(BINARY_NAME)
 
-build-js:
-	esbuild ../deno-toolkit/src/client/src/editor/CodeMirrorEditor.ts \
-      --bundle --minify \
-      --outfile=static/codemirror-editor.js \
-      --global-name=LiveCode
+#build-js:
+#	esbuild ../deno-toolkit/src/client/src/editor/CodeMirrorEditor.ts \
+#      --bundle --minify \
+#      --outfile=static/codemirror-editor.js \
+#      --global-name=LiveCode
 
 test:
 	go test
