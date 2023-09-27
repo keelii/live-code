@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>%s</title>
+    <script src="//storage.360buyimg.com/dest/react.production.min.js"></script>
+    <script src="//storage.360buyimg.com/dest/react-dom.production.min.js"></script>
     <script src="//storage.360buyimg.com/dest/lzutf8.min.js"></script>
     <script>
         function compressText(str) { return LZUTF8.compress(str, {outputEncoding: "Base64"}) }
@@ -66,25 +68,6 @@
                 document.getElementById("sticker").appendChild(toggleBtn)
             } catch (e) { console.error(e) }
         })()
-    </script>
-    <script>
-        var writeScript = function(src) {
-            document.write("\x3Cscript src='"+ src +"'>\x3C/script>")
-        }
-        if (window.parent.React) {
-            window.React = window.parent.React;
-        } else {
-            writeScript("//storage.360buyimg.com/dest/react.production.min.js")
-        }
-        if (window.parent.ReactDOM) {
-            window.ReactDOM = window.parent.ReactDOM
-        } else {
-            writeScript("//storage.360buyimg.com/dest/react-dom.production.min.js")
-        }
-        window.require = function (name) {
-            if (name === "react") return window.React;
-            if (name === "react-dom") return window.ReactDOM;
-        }
     </script>
     <script>%s</script>
 </body>
