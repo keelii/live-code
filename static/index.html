@@ -82,10 +82,10 @@
 
 <script>
     (function (lc) {
-        const getCode = function(code) {
+        var getCode = function(code) {
             return code || lc.editor.view.state.doc.toString()
         }
-        const iframe = document.getElementById('preview')
+        var iframe = document.getElementById('preview')
 
         lc.handleChange = (content) => {
             lc.build(getCode(content), ({ok, data, msg}) => {
@@ -108,30 +108,29 @@
             })
         }
         lc.handleShare = (content) => {
-            const url = location.origin + "/preview?code=" +
+            var url = location.origin + "/view?code=" +
                 encodeURIComponent(compressText(getCode(content)));
-            const yes = window.prompt(
+            var yes = window.prompt(
                 "按确认将复制下面的 URL 并在新页面打开：",
                 url,
             );
             if (yes) {
                 window.open(url);
             }
-
         }
 
         lc.debounce = function (func, wait, immediate) {
             let timeout;
             return function () {
-                const context = this;
-                const args = arguments;
+                var context = this;
+                var args = arguments;
 
-                const later = function () {
+                var later = function () {
                     timeout = null;
                     if (!immediate) func.apply(context, args);
                 };
 
-                const callNow = immediate && !timeout;
+                var callNow = immediate && !timeout;
                 clearTimeout(timeout);
                 timeout = setTimeout(later, wait);
                 if (callNow) func.apply(context, args);
@@ -157,15 +156,15 @@
                 .then(callback).catch(console.error)
         }
 
-        const writeIframeContent = (content) => {
-            const win = iframe.contentWindow;
-            const doc = iframe.contentDocument || win.document;
-            const get = (id) => doc.getElementById(id);
+        var writeIframeContent = (content) => {
+            var win = iframe.contentWindow;
+            var doc = iframe.contentDocument || win.document;
+            var get = (id) => doc.getElementById(id);
 
             win._REACT_ROOT_?.unmount();
             get('script')?.remove();
 
-            const script = doc.createElement('script');
+            var script = doc.createElement('script');
             script.id = 'script';
             script.textContent = content;
 

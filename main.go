@@ -15,6 +15,9 @@ var indexHTML []byte
 //go:embed static/preview.html
 var previewHTML string
 
+//go:embed static/view.html
+var viewHTML string
+
 ////go:embed static/codemirror-editor.js
 //var codemirrorEditorJS []byte
 
@@ -27,6 +30,19 @@ func main() {
 	})
 	Get("/", func(req *LcRequest, res *LcResponse) {
 		res.WriteHTML(indexHTML)
+	})
+	Get("/view", func(req *LcRequest, res *LcResponse) {
+		codeParam := req.URL.Query().Get("code")
+		originCode := bds.DecompressText(codeParam)
+		ret := BuildReactCode(originCode, api.TransformOptions{})
+		htmlString := ""
+		if ret.Ok {
+			htmlString = fmt.Sprintf(viewHTML, "View", ret.Data)
+		} else {
+			errCode := fmt.Sprintf("console.error(%[1]s);alert(%[1]s)", ToJsonString(ret.Msg))
+			htmlString = fmt.Sprintf(viewHTML, "Error", errCode)
+		}
+		res.WriteHTML([]byte(htmlString))
 	})
 	Get("/preview", func(req *LcRequest, res *LcResponse) {
 		codeParam := req.URL.Query().Get("code")

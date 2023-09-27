@@ -6,8 +6,10 @@
 </head>
 <body>
     <div id="root"></div>
-
     <script>
+        if (self === top) {
+            alert("Please open this page in a frame")
+        }
         var writeScript = function(src) {
             document.write("\x3Cscript src='"+ src +"'>\x3C/script>")
         }

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>%s</title>
+    <script src="//storage.360buyimg.com/dest/lzutf8.min.js"></script>
+    <script>
+        function compressText(str) { return LZUTF8.compress(str, {outputEncoding: "Base64"}) }
+        function decompressText(str) { return LZUTF8.decompress(str, {inputEncoding: "Base64"}) }
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+    <div id="code" style="display:none;background:#eee;padding:1em;">
+        <pre></pre>
+    </div>
+
+    <div style="position: fixed; right: 1em; bottom: 1em; font-size:12px;" id="sticker"></div>
+    <script>
+        (function () {
+            try {
+                var copyToClipboard = function (text) {
+                    const textarea = document.createElement("textarea");
+                    textarea.value = text;
+                    textarea.style.position = "fixed";
+                    textarea.style.opacity = "0";
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(textarea);
+                };
+                var codeParam = new URLSearchParams(location.search).get("code")
+                var root = document.getElementById("root")
+                var code = document.getElementById("code")
+                var getCode = function () {
+                    return decompressText(decodeURIComponent(codeParam))
+                }
+                var escapeHTML = function (str) {
+                    return str.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                }
+                var toggleCode = function() {
+                    if (root.style.display === "none") {
+                        root.style.display = "block"
+                        code.style.display = "none"
+                    } else {
+                        root.style.display = "none"
+                        code.style.display = "block"
+                    }
+                }
+
+                if (!codeParam) {
+                    alert("No code found in URL")
+                }
+
+                var copyBtn = document.createElement("button")
+                copyBtn.innerText = "Copy Code"
+                copyBtn.onclick = function() {
+                    copyToClipboard(getCode())
+                }
+                code.querySelector("pre").innerHTML = escapeHTML(getCode())
+                code.insertBefore(copyBtn, code.querySelector("pre"))
+
+                var toggleBtn = document.createElement("button")
+                toggleBtn.innerText = "Source Code"
+                toggleBtn.onclick = toggleCode
+                document.getElementById("sticker").appendChild(toggleBtn)
+            } catch (e) { console.error(e) }
+        })()
+    </script>
+    <script>
+        var writeScript = function(src) {
+            document.write("\x3Cscript src='"+ src +"'>\x3C/script>")
+        }
+        if (window.parent.React) {
+            window.React = window.parent.React;
+        } else {
+            writeScript("//storage.360buyimg.com/dest/react.production.min.js")
+        }
+        if (window.parent.ReactDOM) {
+            window.ReactDOM = window.parent.ReactDOM
+        } else {
+            writeScript("//storage.360buyimg.com/dest/react-dom.production.min.js")
+        }
+        window.require = function (name) {
+            if (name === "react") return window.React;
+            if (name === "react-dom") return window.ReactDOM;
+        }
+    </script>
+    <script>%s</script>
+</body>
+</html>
+
