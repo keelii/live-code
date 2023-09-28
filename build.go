@@ -33,6 +33,7 @@ func Build(code string, options api.TransformOptions) BuildResult {
 		Loader:    api.LoaderTSX,
 		Format:    api.FormatIIFE,
 		Sourcemap: api.SourceMapInline,
+		//LogLevel:  api.LogLevelDebug,
 	}
 
 	if options.Sourcemap != config.Sourcemap {

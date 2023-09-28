@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/evanw/esbuild/pkg/api"
 	bds "github.com/keelii/goja_binding"
+	prettier "github.com/keelii/prettier-go"
 	"log"
 	"net/http"
 )
@@ -17,9 +18,6 @@ var previewHTML string
 
 //go:embed static/view.html
 var viewHTML string
-
-////go:embed static/codemirror-editor.js
-//var codemirrorEditorJS []byte
 
 //go:embed static/favicon.ico
 var favicon []byte
@@ -58,13 +56,9 @@ func main() {
 		res.WriteHTML([]byte(htmlString))
 	})
 
-	//Get("/static/codemirror-editor.js", func(req *LcRequest, res *LcResponse) {
-	//	res.WriteJS(codemirrorEditorJS)
-	//})
-
 	Post("/api/format", func(req *LcRequest, res *LcResponse) {
 		code := req.GetParam("code")
-		ret, err := bds.PrettierFormat(code.(string), bds.PrettierFormatOptions{})
+		ret, err := prettier.FormatTypeScript(code.(string), prettier.PrettierOption{})
 		if err != nil {
 			fmt.Println("error:", err)
 		} else {
