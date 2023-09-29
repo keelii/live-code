@@ -37,7 +37,7 @@ func main() {
 		if ret.Ok {
 			htmlString = fmt.Sprintf(viewHTML, "View", ret.Data)
 		} else {
-			errCode := fmt.Sprintf("console.error(%[1]s);alert(%[1]s)", ToJsonString(ret.Msg))
+			errCode := fmt.Sprintf("console.error(%[1]s);Toast.danger(%[1]s)", ToJsonString(ret.Msg))
 			htmlString = fmt.Sprintf(viewHTML, "Error", errCode)
 		}
 		res.WriteHTML([]byte(htmlString))
@@ -50,7 +50,7 @@ func main() {
 		if ret.Ok {
 			htmlString = fmt.Sprintf(previewHTML, "Preivew", ret.Data)
 		} else {
-			errCode := fmt.Sprintf("console.error(%[1]s);alert(%[1]s)", ToJsonString(ret.Msg))
+			errCode := fmt.Sprintf("console.error(%[1]s);Toast.danger(%[1]s)", ToJsonString(ret.Msg))
 			htmlString = fmt.Sprintf(previewHTML, "Error", errCode)
 		}
 		res.WriteHTML([]byte(htmlString))

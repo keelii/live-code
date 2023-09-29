@@ -61,9 +61,14 @@ try {
 } catch (e) { 
   console.error(e)
   if (e instanceof ReferenceError && e.message.includes("App is not defined")) {
-    alert("App component is not defined, please define it like this:\n" + "function App() {\n    return <div>Hello, live-code.</div>\n}")	
+    window.parent.Toast && window.parent.Toast.danger("App component is not defined, please define it like this:"+
+"<pre>" +
+"function App() {\n" +
+"	return &lt;div&gt;Hello, live-code.&lt;/div&gt;\n" +
+"}\n" +
+"</pre>")	
   } else {
-    alert(e); 
+    window.parent.Toast && window.parent.Toast.warning(e); 
   }
 }
 `, code)
