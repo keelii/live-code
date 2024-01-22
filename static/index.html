@@ -43,8 +43,132 @@
             top: 10px;
             right: 10px;
         }
+
+
+        .sh-toast-container {
+            position: fixed;
+            /*  bottom: 20px;*/
+            right: 20px;
+            max-width: 500px;
+            z-index: 9999;
+        }
+
+        .sh-toast-container.top {
+            top: 10px;
+        }
+
+        .sh-toast-container.bottom {
+            bottom: 20px;
+        }
+
+        .sh-toast {
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .success {
+            background-color: #00cc44;
+            color: white;
+        }
+
+        .danger {
+            background-color: #ff3300;
+            color: white;
+        }
+
+        .warning {
+            background-color: #ffcc00;
+            color: black;
+        }
+
+        .info {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .sh-progress-bar {
+            height: 4px;
+            background-color: #ccc;
+            width: 100%;
+            position: relative;
+            bottom: -16px;
+            left: 0;
+        }
+
+        .sh-toast.with-sh-progress-bar .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background-color: #ccc;
+            width: 0;
+        }
     </style>
 
+    <script>
+        const Toast = window.Toast = {
+            success(message, Settings = []) {
+                this._showToast(message, 'success', Settings);
+            },
+            danger(message, Settings = []) {
+                this._showToast(message, 'danger', Settings);
+            },
+            warning(message, Settings = []) {
+                this._showToast(message, 'warning', Settings);
+            },
+            info(message, Settings = []) {
+                this._showToast(message, 'info', Settings);
+            },
+
+            _showToast(message, type, Settings){
+                let duration = Settings.duration || 5000;
+                let showProgress = Settings.showProgress || false;
+                let toastLocation = Settings.toastLocation || 'top';
+
+                const toastContainers = {
+                    top: document.getElementById('shToastContainerTop'),
+                    bottom: document.getElementById('shToastContainerBottom'),
+                };
+
+                const shToastContainer = toastContainers[toastLocation];
+                const toast = document.createElement('div');
+                toast.classList.add('sh-toast', type);
+                toast.innerHTML = message;
+
+                const progressBar = document.createElement('div');
+                progressBar.classList.add('sh-progress-bar');
+
+                if(showProgress) {
+                    toast.classList.add('with-sh-progress-bar');
+                    progressBar.style.width = '0';
+                    toast.appendChild(progressBar);
+                }
+
+                shToastContainer.appendChild(toast);
+                shToastContainer.classList.remove('top', 'bottom');
+                shToastContainer.classList.add(toastLocation);
+
+                const startTimestamp = Date.now();
+
+                function updateProgressBar() {
+                    const elapsedTime = Date.now() - startTimestamp;
+                    const remainingTime = Math.max(0, duration - elapsedTime);
+                    const percentage = (remainingTime / duration) * 100;
+                    progressBar.style.width = `${percentage}%`;
+
+                    if (remainingTime > 0) {
+                        requestAnimationFrame(updateProgressBar);
+                    } else {
+                        shToastContainer.removeChild(toast);
+                    }
+                }
+
+                requestAnimationFrame(updateProgressBar);
+            }
+        };
+    </script>
     <script src="//s.arp.sh/55e0b1e2/lzutf8.min.js"></script>
     <script>
         function compressText(str) { return LZUTF8.compress(str, {outputEncoding: "Base64"}) }
@@ -80,6 +204,10 @@
     </div>
 </main>
 
+<div class="sh-toast-container" id="shToastContainerTop"></div>
+<div class="sh-toast-container" id="shToastContainerBottom"></div>
+
+
 <script>
     (function (lc) {
         var getCode = function(code) {
@@ -90,8 +218,7 @@
         lc.handleChange = (content) => {
             lc.build(getCode(content), ({ok, data, msg}) => {
                 if (!ok) {
-                    console.error(msg)
-                    alert(msg)
+                    Toast.warning(msg)
                 } else {
                     writeIframeContent(data)
                 }
@@ -100,8 +227,7 @@
         lc.handleFormat = (content) => {
             lc.format(getCode(content), ({ok, data, msg}) => {
                 if (!ok) {
-                    console.error(msg)
-                    alert(msg)
+                    Toast.warning(msg)
                 } else {
                     lc.editor.setContent(data)
                 }
