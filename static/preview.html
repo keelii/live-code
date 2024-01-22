@@ -16,12 +16,12 @@
         if (window.parent.React) {
             window.React = window.parent.React;
         } else {
-            writeScript("//storage.360buyimg.com/dest/react.production.min.js")
+            writeScript("//s.arp.sh/55e0b1e2/react.production.min.js")
         }
         if (window.parent.ReactDOM) {
             window.ReactDOM = window.parent.ReactDOM
         } else {
-            writeScript("//storage.360buyimg.com/dest/react-dom.production.min.js")
+            writeScript("//s.arp.sh/55e0b1e2/react-dom.production.min.js")
         }
         window.require = function (name) {
             if (name === "react") return window.React;
